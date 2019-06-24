@@ -15,16 +15,17 @@ export class Translation {
      * @param input ITranslate interface used to perform a translation
      */
     public static async translate(input: ITranslate): Promise<[string, any]> {
-        const apiKey = `${process.env.TRANSLATE_API}`;
-
-        if (!apiKey) {
-            throw Error('No configured API key');
-        }
-
         if (input &&
             input.source && input.target) {
             // Read in the .env file and process the variables
             dotenv.config();
+
+            const apiKey = `${process.env.TRANSLATE_API}`;
+
+            if (!apiKey) {
+                throw Error('No configured API key');
+            }
+
             const translateObj = new Translate({
                 key: apiKey
             });
