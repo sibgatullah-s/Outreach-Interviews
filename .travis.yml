@@ -24,6 +24,7 @@ jobs:
       && npm run build
       && npm run test
     - cd $HOME/build/AES-Outreach/Outreach-Interviews/documentation-questions && mvn clean install
+    name: "Build Outreach-Interviews"
 stages:
 - test
 notifications:
