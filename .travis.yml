@@ -8,9 +8,9 @@ node_js: '10'
 jdk:
 - openjdk11
 addons:
-    apt:
-        packages:
-          - openjdk-8-jdk
+  apt:
+    packages:
+    - openjdk-8-jdk
 cache:
   directories:
   - "$HOME/.m2"
@@ -18,13 +18,13 @@ cache:
 jobs:
   include:
   - script:
-    - cd $HOME/build/AES-Outreach/Outreach-Interviews/candidate-questions/server-questions && mvn clean install
-    - cd $HOME/build/AES-Outreach/Outreach-Interviews/candidate-questions/client-questions && npm install
-      && npm run lint
-      && npm run build
-      && npm run test
-    - cd $HOME/build/AES-Outreach/Outreach-Interviews/documentation-questions && mvn clean install
-    name: "Build Outreach-Interviews"
+    - cd $HOME/build/AES-Outreach/Outreach-Interviews/candidate-questions/server-questions
+      && mvn clean install
+    - cd $HOME/build/AES-Outreach/Outreach-Interviews/candidate-questions/client-questions
+      && npm install && npm run lint && npm run build && npm run test
+    - cd $HOME/build/AES-Outreach/Outreach-Interviews/documentation-questions && mvn
+      clean install
+    name: Build Outreach-Interviews
 stages:
 - test
 notifications:
@@ -35,4 +35,4 @@ notifications:
     - patrique.legault@uottawa.ca
 env:
   global:
-    secure: VuIgpqkaQnVmn3qDzJOCr5qrD9cns874HFNBqzU3Yhm3EmJootr9nAOyGEFk8kI5gUEoJWh5XV30YFeT1d6QnwTHdFLaE3LTY3AMT4FOrbsZhPMeaKdl2nBEaCAVDqxTCWf7mQoJVu/7eg6lbDfw8T9mkjny4nDUXsXmXNBFoI3Wngzudm1Y4m5CF/IcOHugHL2zej8hwqMpDe1x3jABvvCtvtD7Ez0VXXK+rmMaQqZR2maKHlg6dv5h/LqIVqb65xB+ExEAuQ4w7akiBs0/9U3JcN9Hn43AbxcIddsvSPp75FEaeCR4Itwa/M4J6hf9m2l7gi6/tkcGNweTnlLmnb+E+JTPRj76oJ4TJhpQ11SsJq1QRTa2F+jV27BeaEF+MAEy1H9tAHyxikKkoU7mI8yG2kEEZzSLum7yYjfk4mgxYZv1EPcwiSnQvAxj7QsbTowxdtDPMOkRgnS0zM8MLoJOUW+SbFFKfZXuKI4iIAiyo7dL/gKr71w8QckGxG/UHSctrravX6zBv3JQa3yFUQPpSYgQBbENF/28dSxbbQ6ojvKV1XmsMOp07pf1z82O0vHANIkUNSfGFo7jELKDA1huUre9D5BydO5+X6rffH0Ea1ANBP6gCpE+WdQplQ1ArKiZxzxu8glEYOgUMpQKwmstjdxpYh2CrV1XxbejGHE=
+    secure: eYfQhcQbHp6VSS0G/xj++h+CRDdPwNjdv19sk6+7r2qtfTVdENKxHy8wOte+F4W209CnqqOJSy+h7OiiV+6j1jt5XeXAwjzBVHKoSvCkwScLzVYJ/YQK4HI/FxIURqv8i7ldWzyloyROT6dK0AlNDlekE/1oqPsExHxDDwwrxnBpOMTk8oYSzNijdeEpmmcGwFzqEOkr6c710VadzyLYk27MoRQIeKXhV1paQy5Bg/C5axoA5vXMFBRDKnRFGgbj3/6de+mdRVXoY+m8I6gRdzM49dXuXJvShqu18Z2gQO0h/An+96/Sz9vc7twlxWRM782wVkqYzKf2Rrjiel1h64wDGwyCDLDElcdk7BDbzdCh/2h1kgPA87mbNenqkIzfbbw9jUvfrA3o9OJUkQk2UYpP3pCRzakxTzgHgSrCSmMstKApTY8UXpg4/bRI7B8gpEaW6umulNBfx5equQWvpPP+q5SUcduayiPN682sVeGc5c597W5aJzEoUTWLUv7/R1E1d7O4ZAW8mWD2SPcQ0cw7Oc6rV6Ihu9mtLKOF11bRNeii5GlY+Zk0UUSrutObaDw4NoNaavXIQdaB1fNTJ2Z0tfouI0epaQJFa9ik2CCk0jvv60Eu/2uuYEuvKn8Z4HbEuiPAfNuao6mJj7SfnS/bDtf9iIE+tKifbJ9EriQ=
