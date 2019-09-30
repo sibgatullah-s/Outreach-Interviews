@@ -25,13 +25,14 @@ public class MapRoutesHelper
 	public static class RoutesBuilder {
 
 		private String origin;
+		private String location;
 		private String destination;
 		private MapRegions region;
 		private MapOperations operation;
 		private MapModes mode;
 		private JsonObject result;
 
-		private final String URL = "https://maps.googleapis.com/maps/api/";
+		private final String URL = "https://maps.googleapis.com/maps/api/geocode/json?";
 		private CloseableHttpClient httpclient = HttpClients.createDefault();
 		
 		/**
@@ -95,6 +96,30 @@ public class MapRoutesHelper
 		 * @throws IOException Thrown to indicate that the requested operation is not supported.
 		 * @throws IllegalArgumentException Thrown to indicate that a method has been passed an illegal orinappropriate argument.
 		 */
+		public RoutesBuilder getJSON() throws UnsupportedOperationException, IOException, IllegalArgumentException {
+			String requestURL = this.getURL()  	+ "address=" + this.getLocation() 
+												+ "&key=" + this.getAPIKey();
+			
+			if(getMode() != null) {
+				requestURL = requestURL + "&mode=" + this.getMode();
+			}
+			
+			HttpGet httpGet = new HttpGet(requestURL);
+			
+			CloseableHttpResponse response = httpclient.execute(httpGet);
+			
+			try {
+				HttpEntity entity = response.getEntity();
+				String result = IOUtils.toString(entity.getContent(), "UTF-8");
+				this.result = new JsonParser().parse(result).getAsJsonObject();
+			}
+			finally {
+				response.close();
+			}
+			
+			return this;
+		}
+		
 		public RoutesBuilder build() throws UnsupportedOperationException, IOException, IllegalArgumentException {
 			String requestURL = this.getURL()  	+ "&origin=" + getOrigin() 
 												+ "&destination=" + getDestination()
@@ -143,6 +168,22 @@ public class MapRoutesHelper
 			}
 		}
 		
+		public List<String> getLatLong() {
+			if(this.operation.equals(MapOperations.directions) && zeroResults(this.result)) {
+				List<String> list = new ArrayList<String>();
+				String strJSON = this.result.getAsString();
+				String lat = strJSON.substring(strJSON.indexOf("lat")+3, strJSON.indexOf("lng"));
+				String lng = strJSON.substring(strJSON.indexOf("lng"), strJSON.indexOf("location_type"));
+				
+				list.add(lat);
+				list.add(lng);
+				
+				return list;
+			} else {
+				throw new IllegalArgumentException("Does not support " + MapOperations.geocode.name());
+			}
+		}
+		
 
 		//*************************For Internal Use Only***********************************//
 		private final String getURL() {
@@ -150,7 +191,7 @@ public class MapRoutesHelper
 		}
 
 		private final String getAPIKey() {
-			return System.getenv("OUTREACH_MAPS_KEY");
+			return "AIzaSyD8WtnBwxDPsHW7VwsxsBMie9uphGqQcSA";
 		}
 		
 		private final String getOrigin() {
@@ -158,6 +199,13 @@ public class MapRoutesHelper
 				throw new IllegalArgumentException("Origin cannot be empty");
 			
 			return this.origin;
+		}
+		
+		private final String getLocation() {
+			if(this.location == null)
+				throw new IllegalArgumentException("Location is empty");
+			
+			return this.location;
 		}
 		
 		private final String getDestination() {
@@ -181,6 +229,8 @@ public class MapRoutesHelper
 			
 			return this.region.name();
 		}
+		
+	
 		
 		private final boolean zeroResults(JsonObject obj) {
 			return !obj.get("status").getAsString().equals("ZERO_RESULTS");
